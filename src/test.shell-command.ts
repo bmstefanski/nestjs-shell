@@ -12,7 +12,7 @@ export class TestShellCommand extends ShellComponent {
   }
 
   @ShellCommand({ name: 'abc', pattern: '<testString> <@varargs>', prefix: '.', description: '' })
-  public async testCommand(testString: string, varargs: string): Promise<string> {
+  public async testCommand(varargs: string, testString: string): Promise<string> {
     return `I've got executed ${testString} and ${varargs}`
   }
 }
