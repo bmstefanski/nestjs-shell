@@ -10,8 +10,6 @@ export class ShellBootstraper {
       prompt: `${options.prompt || '>'} `,
     })
 
-    rl.prompt()
-
     const onLine = async (line) => {
       const splittedLineResult = line.trim().split(' ')
 
@@ -22,12 +20,9 @@ export class ShellBootstraper {
         return
       }
 
-      command.handler(line)
+      return command.handler(line)
     }
 
-    rl.on('line', async (input) => {
-      await onLine(input)
-      rl.prompt()
-    }).on('close', () => process.exit())
+    rl.on('line', async (input) => onLine(input).then(() => rl.prompt())).on('close', () => process.exit())
   }
 }

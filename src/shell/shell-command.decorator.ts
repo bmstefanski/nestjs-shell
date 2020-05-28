@@ -1,21 +1,18 @@
 import { ShellCommandsRegistry } from './shell-commands.registry'
 import { ShellComponent } from './shell-component'
 
-export function ShellCommand(options: { name: string; prefix?: string; description?: string }): MethodDecorator {
+export function ShellCommand(options: {
+  name: string
+  pattern: string
+  prefix?: string
+  description?: string
+}): MethodDecorator {
   return (target: object, propertyKey: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
     const componentInstance = getComponentInstance(target.constructor.name)
+    const { name, prefix, description } = options
 
-    ShellCommandsRegistry.registerCommand({
-      name: options.name,
-      prefix: options.prefix,
-      description: options.description,
-      handler: async (input) => {
-        const resolvedComponentInstance = await componentInstance
-        const commandMethod = resolvedComponentInstance[propertyKey]
-
-        console.log(await commandMethod.apply(resolvedComponentInstance, ['1', '2']))
-      },
-    })
+    const handler = async (input) => handleAsyncCommand(componentInstance, propertyKey, input)
+    ShellCommandsRegistry.registerCommand({ name, prefix, description, handler })
   }
 }
 
@@ -29,4 +26,15 @@ function _resolveLazyComponent(component: any): any {
 
 function _unwrapComponent(wrappedComponent: any): Function {
   return Object.values(wrappedComponent)[0] as Function
+}
+
+async function handleAsyncCommand(
+  componentInstance: Promise<ShellComponent>,
+  methodName: string | symbol,
+  input: string,
+): Promise<void> {
+  const resolvedComponentInstance = await componentInstance
+  const commandMethod = resolvedComponentInstance[methodName]
+
+  return commandMethod.apply(resolvedComponentInstance, ['1', '2']).then((result) => console.log(result))
 }
