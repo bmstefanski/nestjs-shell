@@ -12,27 +12,23 @@ export class ShellCommandsRegistry {
 
   public static registerComponent(details: { componentFile: () => Promise<any>; args: any[] }): void {
     const importResults = details.componentFile() as Promise<typeof ShellComponent>
-
     this.COMPONENTS.push({ lazyComponent: importResults, args: details.args })
-    console.log('executed')
   }
 
   public static getComponent(componentClassName: string): Promise<Component> {
-    return Promise.all(this.COMPONENTS).then((originalComponents) => {
-      return originalComponents.find((singleOriginalComponent) => {
-        return singleOriginalComponent.lazyComponent.then((lazyComponent) => {
-          const lazyComponentClassName = Object.keys(lazyComponent)[0]
-          return lazyComponentClassName === componentClassName
-        })
-      })
-    })
+    return this.findInComponents((component) => this.componentWithNameSameAsSpecified(component, componentClassName))
+  }
 
-    return null
-    // return this.COMPONENTS.find((originalComponent) => originalComponentClassName === componentClassName)
-    // return results.find((originalComponent) => {
-    // const originalComponentClassName = Object.keys(originalComponent)[0]
-    // return originalComponentClassName === componentClassName
-    // })
+  private static findInComponents(predicate: (value: Component) => Promise<boolean>): Promise<Component | undefined> {
+    const find = (promiseWrappedComponents) => promiseWrappedComponents.find((_: Component) => predicate(_))
+    return Promise.all(this.COMPONENTS).then(find)
+  }
+
+  private static componentWithNameSameAsSpecified(component: Component, componentClassName: string): Promise<boolean> {
+    return component.lazyComponent.then((lazyComponent) => {
+      const lazyComponentClassName = Object.keys(lazyComponent)[0]
+      return lazyComponentClassName === componentClassName
+    })
   }
 
   public static registerCommand(command: Command): void {
