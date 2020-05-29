@@ -1,6 +1,10 @@
+import { deepClone } from 'src/helper/deep-clone'
 import { getFunctionArgs } from 'src/helper/get-function-args'
+import { PatternParameters, SinglePatternParameterWithValue } from './pattern-parameter.type'
+import { parsePattern } from './pattern.parser'
 import { ShellCommandsRegistry } from './shell-commands.registry'
 import { ShellComponent } from './shell-component'
+import { mapActualValueToParams } from './value-to-param.mapper'
 
 export function ShellCommand(options: {
   name: string
@@ -9,53 +13,22 @@ export function ShellCommand(options: {
   pattern?: string
 }): MethodDecorator {
   return (target: object, methodName: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
-    const componentInstance = getComponentInstance(target.constructor.name)
+    const componentInstance = _getComponentInstance(target.constructor.name)
     const { name, prefix, description, pattern } = options
 
     const handler = async (input) => {
       const resolvedComponentInstance = await componentInstance
       const commandMethod = resolvedComponentInstance[methodName]
 
-      const removeBrackets = (value) => value.replace(/\<|\>|\[|\]/g, '')
+      const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
 
-      let patternArgs = {}
-      pattern
-        .split(' ')
-        .filter((string) => !!string.trim())
-        .forEach((rawArg, index) => {
-          const replacedArg = removeBrackets(rawArg)
-          patternArgs = {
-            ...patternArgs,
-            [replacedArg.replace('@', '')]: {
-              parameterIndex: 0,
-              patternIndex: index,
-              isRequired: rawArg.includes('<'),
-              isVarargs: replacedArg.includes('@'),
-            },
-          }
-        })
-
-      getFunctionArgs(commandMethod).forEach((value, index) => {
-        patternArgs = { ...patternArgs, [value]: { ...patternArgs[value], parameterIndex: index } }
-      })
-
-      const varArgsPart = (arg) =>
-        input.slice(arg.patternIndex).length === 0 ? null : input.slice(arg.patternIndex).join(' ')
-      const sortedFunctionArguments = Object.values(patternArgs)
-        .sort((a: any, b: any) => a.parameterIndex - b.parameterIndex)
-        .map((arg: any) => ({ ...arg, value: arg.isVarargs ? varArgsPart(arg) : input[arg.patternIndex] || null }))
-      const requiredPatternArg: any = sortedFunctionArguments.find((arg: any) => arg.isRequired)
-
-      if (requiredPatternArg && !requiredPatternArg.value) {
+      if (_hasAnyRequiredParam(patternParams)) {
         console.log(`Invalid usage: ${prefix + name} ${pattern}`)
         return
       }
 
       return commandMethod
-        .apply(
-          resolvedComponentInstance,
-          sortedFunctionArguments.map((arg: any) => arg.value),
-        )
+        .apply(resolvedComponentInstance, _mapParamsToValueOnly(patternParams))
         .then((result) => console.log(result))
     }
 
@@ -63,7 +36,7 @@ export function ShellCommand(options: {
   }
 }
 
-function getComponentInstance(componentClassName: string): Promise<ShellComponent> {
+function _getComponentInstance(componentClassName: string): Promise<ShellComponent> {
   return ShellCommandsRegistry.getComponent(componentClassName).then(_resolveLazyComponent)
 }
 
@@ -73,4 +46,33 @@ function _resolveLazyComponent(component: any): any {
 
 function _unwrapComponent(wrappedComponent: any): Function {
   return Object.values(wrappedComponent)[0] as Function
+}
+
+function _getParsedPatternParams(
+  pattern: string,
+  commandMethod: Function,
+  input: string[],
+): SinglePatternParameterWithValue[] {
+  let patternParams: PatternParameters | SinglePatternParameterWithValue[] = parsePattern(pattern)
+  patternParams = _replaceSignatureIndex(patternParams, getFunctionArgs(commandMethod))
+  patternParams = mapActualValueToParams(patternParams, input)
+  return patternParams
+}
+
+function _replaceSignatureIndex(patternArgs, functionArguments): PatternParameters {
+  let mutablePatternArgs: PatternParameters = deepClone(patternArgs)
+  functionArguments.forEach((arg, index) => {
+    mutablePatternArgs = { ...mutablePatternArgs, [arg]: { ...mutablePatternArgs[arg], signatureIndex: index } }
+  })
+
+  return mutablePatternArgs
+}
+
+function _hasAnyRequiredParam(patternParams: SinglePatternParameterWithValue[]): boolean {
+  const requiredParam = patternParams.find((arg: any) => arg.isRequired)
+  return requiredParam && !requiredParam.value
+}
+
+function _mapParamsToValueOnly(patternParams: SinglePatternParameterWithValue[]): string[] {
+  return patternParams.map((param) => param.value)
 }
