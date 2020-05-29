@@ -7,12 +7,11 @@ export class TestShellCommand extends ShellComponent {
 
   constructor(private readonly testClass: TestClass) {
     super()
-
     this.testContent = 'def'
   }
 
-  @ShellCommand({ name: 'abc', pattern: '<testString> [@varargs]', prefix: '.', description: '' })
-  public async testCommand(varargs: string, testString: string): Promise<string> {
+  @ShellCommand({ name: 'abc', pattern: '<testString> <testString2> [@varargs]', prefix: '.', description: '' })
+  public async testCommand(testString2: string, varargs: string, testString: string): Promise<string> {
     return `I've got executed ${testString} and ${varargs}`
   }
 }

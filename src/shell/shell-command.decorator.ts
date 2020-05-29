@@ -19,7 +19,6 @@ export function ShellCommand(options: {
     const handler = async (input) => {
       const resolvedComponentInstance = await componentInstance
       const commandMethod = resolvedComponentInstance[methodName]
-
       const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
 
       if (_hasAnyRequiredParam(patternParams)) {
@@ -64,12 +63,11 @@ function _replaceSignatureIndex(patternArgs, functionArguments): PatternParamete
   functionArguments.forEach((arg, index) => {
     mutablePatternArgs = { ...mutablePatternArgs, [arg]: { ...mutablePatternArgs[arg], signatureIndex: index } }
   })
-
   return mutablePatternArgs
 }
 
 function _hasAnyRequiredParam(patternParams: SinglePatternParameterWithValue[]): boolean {
-  const requiredParam = patternParams.find((arg: any) => arg.isRequired)
+  const requiredParam = patternParams.find((arg) => arg.isRequired)
   return requiredParam && !requiredParam.value
 }
 

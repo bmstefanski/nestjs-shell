@@ -2,7 +2,7 @@ import { ShellComponent } from './shell-component'
 
 type Component = { lazyComponent: Promise<typeof ShellComponent>; args: any[] }
 type Command = { name: string; prefix: string; description: string; pattern: string; handler: InputHandler }
-type InputHandler = (input: string) => any
+type InputHandler = (input: string) => Promise<any>
 
 export class ShellCommandsRegistry {
   private static readonly COMPONENTS: Component[] = []
