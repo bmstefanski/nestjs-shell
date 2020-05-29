@@ -16,17 +16,21 @@ export function ShellCommand(options: {
       const resolvedComponentInstance = await componentInstance
       const commandMethod = resolvedComponentInstance[methodName]
 
+      const removeBrackets = (value) => value.replace(/\<|\>|\[|\]/g, '')
+
       let patternArgs = {}
       pattern
-        .split(/\<([^>]+)\>/g)
+        .split(' ')
         .filter((string) => !!string.trim())
-        .forEach((arg, index) => {
+        .forEach((rawArg, index) => {
+          const replacedArg = removeBrackets(rawArg)
           patternArgs = {
             ...patternArgs,
-            [arg.replace('@', '')]: {
+            [replacedArg.replace('@', '')]: {
               parameterIndex: 0,
               patternIndex: index,
-              isVarargs: arg.includes('@'),
+              isRequired: rawArg.includes('<'),
+              isVarargs: replacedArg.includes('@'),
             },
           }
         })
@@ -39,10 +43,19 @@ export function ShellCommand(options: {
         input.slice(arg.patternIndex).length === 0 ? null : input.slice(arg.patternIndex).join(' ')
       const sortedFunctionArguments = Object.values(patternArgs)
         .sort((a: any, b: any) => a.parameterIndex - b.parameterIndex)
-        .map((arg: any) => (arg.isVarargs ? varArgsPart(arg) : input[arg.patternIndex] || null))
+        .map((arg: any) => ({ ...arg, value: arg.isVarargs ? varArgsPart(arg) : input[arg.patternIndex] || null }))
+      const requiredPatternArg: any = sortedFunctionArguments.find((arg: any) => arg.isRequired)
+
+      if (requiredPatternArg && !requiredPatternArg.value) {
+        console.log(`Invalid usage: ${prefix + name} ${pattern}`)
+        return
+      }
 
       return commandMethod
-        .apply(resolvedComponentInstance, sortedFunctionArguments)
+        .apply(
+          resolvedComponentInstance,
+          sortedFunctionArguments.map((arg: any) => arg.value),
+        )
         .then((result) => console.log(result))
     }
 

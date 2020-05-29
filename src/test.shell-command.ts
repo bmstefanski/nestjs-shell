@@ -11,7 +11,7 @@ export class TestShellCommand extends ShellComponent {
     this.testContent = 'def'
   }
 
-  @ShellCommand({ name: 'abc', pattern: '<testString> <@varargs>', prefix: '.', description: '' })
+  @ShellCommand({ name: 'abc', pattern: '<testString> [@varargs]', prefix: '.', description: '' })
   public async testCommand(varargs: string, testString: string): Promise<string> {
     return `I've got executed ${testString} and ${varargs}`
   }
