@@ -20,7 +20,7 @@ export class ShellBootstraper {
         return
       }
 
-      return command.handler(line)
+      return command.handler(splittedLineResult.slice(1))
     }
 
     rl.on('line', async (input) => onLine(input).then(() => rl.prompt())).on('close', () => process.exit())

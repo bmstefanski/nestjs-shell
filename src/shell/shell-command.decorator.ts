@@ -20,19 +20,30 @@ export function ShellCommand(options: {
       pattern
         .split(/\<([^>]+)\>/g)
         .filter((string) => !!string.trim())
-        .forEach((arg) => {
-          patternArgs = { ...patternArgs, [arg.replace('@', '')]: { index: 0, isVarargs: arg.includes('@') } }
+        .forEach((arg, index) => {
+          patternArgs = {
+            ...patternArgs,
+            [arg.replace('@', '')]: {
+              parameterIndex: 0,
+              patternIndex: index,
+              isVarargs: arg.includes('@'),
+            },
+          }
         })
 
-      const functionArgs = getFunctionArgs(commandMethod)
-
-      functionArgs.forEach((value, index) => {
-        patternArgs = { ...patternArgs, [value]: { ...patternArgs[value], index } }
+      getFunctionArgs(commandMethod).forEach((value, index) => {
+        patternArgs = { ...patternArgs, [value]: { ...patternArgs[value], parameterIndex: index } }
       })
 
-      console.log(patternArgs)
+      const varArgsPart = (arg) =>
+        input.slice(arg.patternIndex).length === 0 ? null : input.slice(arg.patternIndex).join(' ')
+      const sortedFunctionArguments = Object.values(patternArgs)
+        .sort((a: any, b: any) => a.parameterIndex - b.parameterIndex)
+        .map((arg: any) => (arg.isVarargs ? varArgsPart(arg) : input[arg.patternIndex] || null))
 
-      return commandMethod.apply(resolvedComponentInstance, ['1', '2']).then((result) => console.log(result))
+      return commandMethod
+        .apply(resolvedComponentInstance, sortedFunctionArguments)
+        .then((result) => console.log(result))
     }
 
     ShellCommandsRegistry.registerCommand({ name, prefix, description, pattern, handler })
