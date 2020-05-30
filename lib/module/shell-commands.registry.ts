@@ -1,8 +1,6 @@
+import { Command } from './command.type'
+import { Component } from './component.type'
 import { ShellComponent } from './shell-component'
-
-type Component = { lazyComponent: Promise<typeof ShellComponent>; args: any[] }
-type Command = { name: string; prefix: string; description: string; pattern: string; handler: InputHandler }
-type InputHandler = (input: string) => Promise<any>
 
 export class ShellCommandsRegistry {
   private static readonly COMPONENTS: Component[] = []
@@ -10,9 +8,9 @@ export class ShellCommandsRegistry {
 
   private constructor() {}
 
-  public static registerComponent(details: { componentFile: () => Promise<any>; args: any[] }): void {
-    const importResults = details.componentFile() as Promise<typeof ShellComponent>
-    this.COMPONENTS.push({ lazyComponent: importResults, args: details.args })
+  public static registerComponent(options: { componentFile: () => Promise<any>; args: any[] }): void {
+    const importResults = options.componentFile() as Promise<typeof ShellComponent>
+    this.COMPONENTS.push({ lazyComponent: importResults, args: options.args })
   }
 
   public static getComponent(componentClassName: string): Promise<Component> {

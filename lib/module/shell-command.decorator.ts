@@ -1,5 +1,4 @@
-import { deepClone } from 'src/helper/deep-clone'
-import { getFunctionArgs } from 'src/helper/get-function-args'
+import { deepClone, getFunctionArgs } from './helper'
 import { PatternParameters, SinglePatternParameterWithValue } from './pattern-parameter.type'
 import { parsePattern } from './pattern.parser'
 import { ShellCommandsRegistry } from './shell-commands.registry'

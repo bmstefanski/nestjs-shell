@@ -1,33 +1,43 @@
 {
-  "name": "nest-shell",
+  "name": "nestjs-shell",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "An interactive shell for NestJS which allows you to plug-in your custom commands and use them when the app's running",
+  "keywords": [
+    "nest",
+    "nestjs",
+    "shell",
+    "console"
+  ],
+  "author": {
+    "name": "Bart Stefanski",
+    "email": "contact@bstefanski.com",
+    "url": "https://bstefanski.com/"
+  },
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "build": "tsc -p tsconfig.json",
+    "format": "prettier --write \"lib/**/*.ts\" \"lib/**/*.spec.ts\"",
+    "prepublish": "npm run format",
+    "publish": "",
     "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
-    "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:cov": "jest --coverage"
   },
-  "dependencies": {
+  "dependencies": {},
+  "peerDependencies": {
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
-    "@nestjs/platform-express": "^6.7.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
+    "@nestjs/common": "^6.7.2",
+    "@nestjs/core": "^6.7.2",
+    "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.0",
+    "rxjs": "^6.5.3",
     "@nestjs/cli": "^6.9.0",
     "@nestjs/schematics": "^6.7.0",
     "@nestjs/testing": "^6.7.1",
@@ -53,7 +63,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "lib",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

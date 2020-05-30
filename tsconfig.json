@@ -11,5 +11,6 @@
     "baseUrl": "./",
     "incremental": true
   },
-  "exclude": ["node_modules", "dist"]
+  "include": ["*.ts", "**/*.ts"],
+  "exclude": ["./index.ts", "./index.d.ts", "./**/*.spec.ts", "examples", "node_modules"]
 }
