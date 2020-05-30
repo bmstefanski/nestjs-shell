@@ -1,4 +1,4 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "lib"
+  "sourceRoot": "src"
 }
