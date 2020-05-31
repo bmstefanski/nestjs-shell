@@ -1,6 +1,6 @@
-import { Command } from './command.type'
-import { Component } from './component.type'
 import { ShellComponent } from './shell-component'
+import { Command } from './type/command.type'
+import { Component } from './type/component.type'
 
 export class ShellCommandsRegistry {
   private static readonly COMPONENTS: Component[] = []

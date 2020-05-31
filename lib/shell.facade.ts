@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
-import { Command } from './command.type'
-import { BootstrapOptions, RegisterComponentOptions } from './options.type'
 import { ShellCommandsRegistry } from './shell-commands.registry'
 import { bootstrapShell } from './shell.bootstraper'
+import { Command } from './type/command.type'
+import { BootstrapOptions, RegisterComponentOptions } from './type/options.type'
 
 @Injectable()
 export class ShellFacade {

@@ -1,5 +1,5 @@
-import { BootstrapOptions } from './options.type'
 import { ShellCommandsRegistry } from './shell-commands.registry'
+import { BootstrapOptions } from './type/options.type'
 
 const readline = require('readline')
 

@@ -1,4 +1,4 @@
-import { PatternParameters } from './pattern-parameter.type'
+import { PatternParameters } from './type/pattern-parameter.type'
 
 export function parsePattern(pattern: string): PatternParameters {
   const splittedBySpace = pattern.split(' ')

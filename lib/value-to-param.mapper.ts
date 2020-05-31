@@ -1,4 +1,4 @@
-import { PatternParameters, SinglePatternParameter, SinglePatternParameterWithValue } from './pattern-parameter.type'
+import { PatternParameters, SinglePatternParameter, SinglePatternParameterWithValue } from './type/pattern-parameter.type'
 
 export function mapActualValueToParams(
   patternParams: PatternParameters,

@@ -1,9 +1,9 @@
-import { deepClone, getFunctionArgs } from './helper'
-import { PatternParameters, SinglePatternParameterWithValue } from './pattern-parameter.type'
-import { parsePattern } from './pattern.parser'
-import { ShellCommandsRegistry } from './shell-commands.registry'
-import { ShellComponent } from './shell-component'
-import { mapActualValueToParams } from './value-to-param.mapper'
+import { deepClone, getFunctionArgs } from '../helper'
+import { parsePattern } from '../pattern.parser'
+import { ShellCommandsRegistry } from '../shell-commands.registry'
+import { ShellComponent } from '../shell-component'
+import { PatternParameters, SinglePatternParameterWithValue } from '../type/pattern-parameter.type'
+import { mapActualValueToParams } from '../value-to-param.mapper'
 
 export function ShellCommand(options: {
   name: string
@@ -12,10 +12,10 @@ export function ShellCommand(options: {
   pattern?: string
 }): MethodDecorator {
   return (target: object, methodName: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
-    const componentInstance = _getComponentInstance(target.constructor.name)
     const { name, prefix, description, pattern } = options
 
     const handler = async (input) => {
+      const componentInstance = _getComponentInstance(target.constructor.name)
       const resolvedComponentInstance = await componentInstance
       const commandMethod = resolvedComponentInstance[methodName]
       const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
