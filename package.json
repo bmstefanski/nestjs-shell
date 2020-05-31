@@ -20,11 +20,9 @@
     "format": "prettier --write \"lib/**/*.ts\" \"lib/**/*.spec.ts\"",
     "prepublish": "npm run format",
     "publish": "",
-    "start:dev": "nest start --watch",
     "test": "jest",
     "test:cov": "jest --coverage"
   },
-  "dependencies": {},
   "peerDependencies": {
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",

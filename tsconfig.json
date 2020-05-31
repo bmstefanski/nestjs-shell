@@ -12,5 +12,5 @@
     "incremental": true
   },
   "include": ["*.ts", "**/*.ts"],
-  "exclude": ["./index.ts", "./index.d.ts", "./**/*.spec.ts", "examples", "node_modules"]
+  "exclude": ["./index.ts", "./index.d.ts", "./**/*.spec.ts", "node_modules"]
 }
