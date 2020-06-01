@@ -1,6 +1,7 @@
 import { ShellComponent } from './shell-component'
 import { Command } from './type/command.type'
 import { Component } from './type/component.type'
+import { findAsync } from './helper/find-async'
 
 export class ShellCommandsRegistry {
   private static readonly COMPONENTS: Component[] = []
@@ -18,7 +19,8 @@ export class ShellCommandsRegistry {
   }
 
   private static findInComponents(predicate: (value: Component) => Promise<boolean>): Promise<Component | undefined> {
-    const find = (promiseWrappedComponents) => promiseWrappedComponents.find((_: Component) => predicate(_))
+    const find = (promiseWrappedComponents: Component[]) =>
+      findAsync(promiseWrappedComponents, async (item: Component) => predicate(item))
     return Promise.all(this.COMPONENTS).then(find)
   }
 
