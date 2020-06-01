@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { ShellCommandsRegistry } from './shell-commands.registry'
+import { ShellComponent } from './shell-component'
 import { bootstrapShell } from './shell.bootstraper'
 import { Command } from './type/command.type'
-import { BootstrapOptions, RegisterComponentOptions } from './type/options.type'
+import { BootstrapOptions } from './type/options.type'
 
 @Injectable()
 export class ShellFacade {
@@ -10,10 +11,8 @@ export class ShellFacade {
     await bootstrapShell(options)
   }
 
-  public registerComponents(...components: RegisterComponentOptions[]): void {
-    components.forEach((component) => {
-      ShellCommandsRegistry.registerComponent({ componentFile: component.componentFile, args: component.args })
-    })
+  public registerComponents(...components: ShellComponent[]): void {
+    components.forEach((component) => ShellCommandsRegistry.registerComponent(component))
   }
 
   public registerCommands(...commands: Command[]): void {

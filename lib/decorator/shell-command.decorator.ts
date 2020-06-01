@@ -1,7 +1,6 @@
 import { deepClone, getFunctionArgs } from '../helper'
 import { parsePattern } from '../pattern.parser'
 import { ShellCommandsRegistry } from '../shell-commands.registry'
-import { ShellComponent } from '../shell-component'
 import { PatternParameters, SinglePatternParameterWithValue } from '../type/pattern-parameter.type'
 import { mapActualValueToParams } from '../value-to-param.mapper'
 
@@ -15,9 +14,8 @@ export function ShellCommand(options: {
     const { name, prefix, description, pattern } = options
 
     const handler = async (input) => {
-      const componentInstance = _getComponentInstance(target.constructor.name)
-      const resolvedComponentInstance = await componentInstance
-      const commandMethod = resolvedComponentInstance[methodName]
+      const componentInstance = ShellCommandsRegistry.getComponent(target.constructor.name)
+      const commandMethod = componentInstance[methodName]
       const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
 
       if (_hasAnyRequiredParam(patternParams)) {
@@ -26,16 +24,12 @@ export function ShellCommand(options: {
       }
 
       return commandMethod
-        .apply(resolvedComponentInstance, _mapParamsToValueOnly(patternParams))
+        .apply(componentInstance, _mapParamsToValueOnly(patternParams))
         .then((result) => console.log(result))
     }
 
     ShellCommandsRegistry.registerCommand({ name, prefix, description, pattern, handler })
   }
-}
-
-function _getComponentInstance(componentClassName: string): Promise<ShellComponent> {
-  return ShellCommandsRegistry.getComponent(componentClassName).then(_resolveLazyComponent)
 }
 
 function _resolveLazyComponent(component: any): any {
