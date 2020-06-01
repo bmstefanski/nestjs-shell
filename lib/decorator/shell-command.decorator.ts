@@ -1,6 +1,6 @@
 import { deepClone, getFunctionArgs } from '../helper'
 import { parsePattern } from '../pattern.parser'
-import { ShellCommandsRegistry } from '../shell-commands.registry'
+import { ShellRegistry } from '../shell.registry'
 import { PatternParameters, SinglePatternParameterWithValue } from '../type/pattern-parameter.type'
 import { mapActualValueToParams } from '../value-to-param.mapper'
 
@@ -14,7 +14,7 @@ export function ShellCommand(options: {
     const { name, prefix, description, pattern } = options
 
     const handler = async (input) => {
-      const componentInstance = ShellCommandsRegistry.getComponent(target.constructor.name)
+      const componentInstance = ShellRegistry.getComponent(target.constructor.name)
       const commandMethod = componentInstance[methodName]
       const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
 
@@ -28,7 +28,7 @@ export function ShellCommand(options: {
         .then((result) => console.log(result))
     }
 
-    ShellCommandsRegistry.registerCommand({ name, prefix, description, pattern, handler })
+    ShellRegistry.registerCommand({ name, prefix, description, pattern, handler })
   }
 }
 

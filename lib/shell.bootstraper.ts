@@ -1,4 +1,4 @@
-import { ShellCommandsRegistry } from './shell-commands.registry'
+import { ShellRegistry } from './shell.registry'
 import { BootstrapOptions } from './type/bootstrap-options.type'
 
 const readline = require('readline')
@@ -13,7 +13,7 @@ export async function bootstrapShell(options: BootstrapOptions = { prompt: '>' }
   const onLine = async (line) => {
     const splittedLineResult = line.trim().split(' ')
 
-    const command = ShellCommandsRegistry.findCommand(splittedLineResult[0])
+    const command = ShellRegistry.findCommand(splittedLineResult[0])
 
     if (!command) {
       console.log(`Say what? I might have heard '${line.trim()}'`)

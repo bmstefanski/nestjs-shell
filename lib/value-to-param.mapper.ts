@@ -6,14 +6,18 @@ import {
 
 export function mapActualValueToParams(
   patternParams: PatternParameters,
-  actualValue: string[],
+  actualParamsValues: string[],
 ): SinglePatternParameterWithValue[] {
-  const arrayMappedParams = Object.values(patternParams) as SinglePatternParameter[]
-  const value = (arg) => (arg.isVarargs ? _joinVarargsIfPresent(actualValue, arg) : _getNormalParam(actualValue, arg))
+  const mutablePatternParams = patternParams || []
 
+  const arrayMappedParams = Object.values(mutablePatternParams) as SinglePatternParameter[]
   return arrayMappedParams
     .sort(_ascendingBySignatureIndex)
-    .map((arg: SinglePatternParameter) => ({ ...arg, value: value(arg) }))
+    .map((arg: SinglePatternParameter) => ({ ...arg, value: _getParamValue(arg, actualParamsValues) }))
+}
+
+function _getParamValue(arg: SinglePatternParameter, actualParamsValues: string[]): any {
+  return arg.isVarargs ? _joinVarargsIfPresent(actualParamsValues, arg) : _getNormalParam(actualParamsValues, arg)
 }
 
 function _joinVarargsIfPresent(actualValue: string[], arg: SinglePatternParameter): string | null {

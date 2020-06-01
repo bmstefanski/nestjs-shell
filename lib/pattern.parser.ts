@@ -1,22 +1,32 @@
-import { PatternParameters } from './type/pattern-parameter.type'
+import { PatternParameters, SinglePatternParameter } from './type/pattern-parameter.type'
 
 export function parsePattern(pattern: string): PatternParameters {
   const splittedBySpace = pattern.split(' ')
   let results = {}
 
-  splittedBySpace.forEach((rawArg, patternIndex) => {
-    const argWithoutBrackets = _removeAllBrackets(rawArg)
-    const paramName = _clearParameterName(argWithoutBrackets)
-    const isRequired = rawArg.includes('<')
-    const isVarargs = argWithoutBrackets.includes('@')
+  if (!pattern || _hasAnyInvalidParam(splittedBySpace)) {
+    return results
+  }
 
-    results = {
-      ...results,
-      [paramName]: { patternIndex, isRequired, isVarargs, signatureIndex: 0 },
-    }
+  splittedBySpace.forEach((rawParam, index) => {
+    results = { ...results, ..._mapParamToProperFormat(rawParam, index) }
   })
 
   return results
+}
+
+function _hasAnyInvalidParam(params: string[]): boolean {
+  const matchInvalidCharacters = /[^A-Za-z0-9_\[\]\<\>\@]+/
+  return params.some((param) => matchInvalidCharacters.test(param))
+}
+
+function _mapParamToProperFormat(param: string, patternIndex: number): PatternParameters {
+  const argWithoutBrackets = _removeAllBrackets(param)
+  const paramName = _clearParameterName(argWithoutBrackets)
+  const isRequired = param.includes('<')
+  const isVarargs = argWithoutBrackets.includes('@')
+
+  return { [paramName]: { patternIndex, isRequired, isVarargs, signatureIndex: 0 } }
 }
 
 function _removeAllBrackets(value: string): string {
