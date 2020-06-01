@@ -9,7 +9,6 @@ export class ShellCommandsRegistry {
 
   public static registerComponent(component: ShellComponent): void {
     const componentClassName = component.constructor.name
-    console.log(componentClassName)
     this.components = { ...this.components, [componentClassName]: component }
   }
 

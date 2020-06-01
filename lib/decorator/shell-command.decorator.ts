@@ -32,14 +32,6 @@ export function ShellCommand(options: {
   }
 }
 
-function _resolveLazyComponent(component: any): any {
-  return component.lazyComponent.then((_: any) => Reflect.construct(_unwrapComponent(_), component.args))
-}
-
-function _unwrapComponent(wrappedComponent: any): Function {
-  return Object.values(wrappedComponent)[0] as Function
-}
-
 function _getParsedPatternParams(
   pattern: string,
   commandMethod: Function,
