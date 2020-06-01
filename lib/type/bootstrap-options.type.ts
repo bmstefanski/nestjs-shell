@@ -1,1 +1,1 @@
-export type BootstrapOptions = { prompt?: string }
+export type BootstrapOptions = { prompt?: string; messages?: { notFound?: string; wrongUsage?: string } }

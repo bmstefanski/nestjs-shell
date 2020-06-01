@@ -37,13 +37,14 @@ describe('parsePattern', () => {
   })
 
   it('should parse pattern with name made up of only letters and numbers and underscores', () => {
-    const pattern = '<@ABCDEFGHIJKLMN_OPQRSTUVWXYZ> [@abcdefghijklmn_opqrstuvwxyz]'
+    const pattern = '<@ABCDEFGHIJKLMN_OPQRSTUVWXYZ> [@abcdefghijklmn_opqrstuvwxyz] <_0123456789_>'
 
     const results = parsePattern(pattern)
 
     expect(results).toStrictEqual({
       ABCDEFGHIJKLMN_OPQRSTUVWXYZ: { signatureIndex: 0, patternIndex: 0, isRequired: true, isVarargs: true },
       abcdefghijklmn_opqrstuvwxyz: { signatureIndex: 0, patternIndex: 1, isRequired: false, isVarargs: true },
+      _0123456789_: { signatureIndex: 0, patternIndex: 2, isRequired: true, isVarargs: false },
     })
   })
 })
