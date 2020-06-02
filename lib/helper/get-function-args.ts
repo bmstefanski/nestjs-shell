@@ -9,7 +9,8 @@ export function getFunctionArgs(func: Function): any[] {
       .substring(openingBracetIndex + 1, closingBracetIndex)
       .split(',')
       .map((arg) => arg.trim())
+      .filter((arg) => arg)
   }
 
-  throw new Error('Passed parameter is undefined or not a function/method')
+  throw new Error('Passed parameter is undefined or not a function')
 }
