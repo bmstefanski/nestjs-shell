@@ -16,7 +16,7 @@ describe('ShellRegistry', () => {
       ShellRegistry.registerComponent(component)
       const results = ShellRegistry.getImmutableComponents()
 
-      expect(results).toStrictEqual({ EmptyTestCommandComponent: {} })
+      expect(results).toStrictEqual(['EmptyTestCommandComponent'])
     })
 
     it('should throw an error if passed falsy argument as a component', () => {
@@ -58,7 +58,7 @@ describe('ShellRegistry', () => {
       ShellRegistry.registerCommand(command)
       const results = ShellRegistry.getImmutableCommands()
 
-      expect(results).toStrictEqual({ [command.prefix + command.name]: removeProperty(command, 'handler') })
+      expect(results).toStrictEqual([{ ...removeProperty(command, 'handler'), name: command.prefix + command.name }])
     })
 
     it('should throw an error if passed falsy argument as a command', () => {
