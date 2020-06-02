@@ -10,6 +10,7 @@ export async function bootstrapShell(options: BootstrapOptions = { prompt: '⤳'
     prompt: `${options.prompt} `,
   })
 
+  const print = options.shellPrinter || ((value) => console.log(value))
   const messages = {
     notFound: `Say what? I might have heard $input`,
     wrongUsage: `Wrong usage: $command $pattern`,
@@ -18,15 +19,15 @@ export async function bootstrapShell(options: BootstrapOptions = { prompt: '⤳'
 
   const onLine = async (line) => {
     const splittedLineResult = line.trim().split(' ')
-
     const command = ShellRegistry.findCommand(splittedLineResult[0])
 
     if (!command) {
-      console.log(messages.notFound.replace('$input', line))
+      print(messages.notFound.replace('$input', line))
       return
     }
 
-    return command.handler(splittedLineResult.slice(1), { wrongUsage: messages.wrongUsage })
+    const commandArguments = splittedLineResult.slice(1)
+    return command.handler(commandArguments, { wrongUsage: messages.wrongUsage }, print)
   }
 
   rl.on('line', async (input) => onLine(input).then(() => rl.prompt())).on('close', () => process.exit())

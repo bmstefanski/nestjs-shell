@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { ShellComponent } from './shell-component'
 import { bootstrapShell } from './shell.bootstraper'
 import { ShellRegistry } from './shell.registry'
-import { BootstrapOptions } from './type/bootstrap-options.type'
+import { BootstrapOptions, ImmutableCommand, ShellComponent } from './type'
 
 @Injectable()
 export class ShellFacade {
@@ -12,5 +11,9 @@ export class ShellFacade {
 
   public registerComponents(...components: ShellComponent[]): void {
     components.forEach((component) => ShellRegistry.registerComponent(component))
+  }
+
+  public getAllCommands(): ImmutableCommand[] {
+    return ShellRegistry.getImmutableCommands()
   }
 }

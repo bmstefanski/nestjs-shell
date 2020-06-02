@@ -1,6 +1,5 @@
 import { deepClone } from './helper'
-import { ShellComponent } from './shell-component'
-import { Command } from './type/command.type'
+import { Command, ImmutableCommand, ShellComponent } from './type'
 
 type Components = { [name: string]: ShellComponent }
 type Commands = { [nameWithPrefix: string]: Command }
@@ -45,11 +44,15 @@ export class ShellRegistry {
     return this.commands[commandWithPrefix]
   }
 
-  public static getImmutableComponents(): Components {
-    return deepClone(this.components)
+  public static getImmutableComponents(): string[] {
+    return Object.keys(deepClone(this.components))
   }
 
-  public static getImmutableCommands(): Commands {
-    return deepClone(this.commands)
+  public static getImmutableCommands(): ImmutableCommand[] {
+    return this.convertCommandsToArray(deepClone(this.commands))
+  }
+
+  private static convertCommandsToArray(commandsInObject: Commands): ImmutableCommand[] {
+    return Object.entries(commandsInObject).map((entry) => ({ ...entry[1], name: entry[0] }))
   }
 }

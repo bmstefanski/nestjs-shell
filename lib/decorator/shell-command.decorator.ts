@@ -11,22 +11,22 @@ export function ShellCommand(options: {
   pattern?: string
 }): MethodDecorator {
   return (target: object, methodName: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
-    const { name, prefix, description, pattern } = options
+    const { name, prefix = '', description = '', pattern = '' } = options
 
-    const handler = async (input, messages) => {
+    const handler = async (input, messages, print) => {
       const componentInstance = ShellRegistry.getComponent(target.constructor.name)
       const commandMethod = componentInstance[methodName]
       const patternParams: SinglePatternParameterWithValue[] = _getParsedPatternParams(pattern, commandMethod, input)
 
       if (_hasAnyRequiredParam(patternParams)) {
         const commandName = (prefix || '') + name
-        console.log(messages.wrongUsage.replace('$command', commandName).replace('$pattern', pattern))
+        print(messages.wrongUsage.replace('$command', commandName).replace('$pattern', pattern))
         return
       }
 
       return commandMethod
         .apply(componentInstance, _mapParamsToValueOnly(patternParams))
-        .then((result) => console.log(result))
+        .then((result) => print(result))
     }
 
     ShellRegistry.registerCommand({ name, prefix, description, pattern, handler })
