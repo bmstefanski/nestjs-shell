@@ -1,15 +1,11 @@
+import { CommandDecoratorOptions } from 'lib/type'
 import { deepClone, getFunctionArgs } from '../helper'
 import { parsePattern } from '../pattern.parser'
 import { ShellRegistry } from '../shell.registry'
 import { PatternParameters, SinglePatternParameterWithValue } from '../type/pattern-parameter.type'
 import { mapActualValueToParams } from '../value-to-param.mapper'
 
-export function ShellCommand(options: {
-  name: string
-  prefix?: string
-  description?: string
-  pattern?: string
-}): MethodDecorator {
+export function ShellCommand(options: CommandDecoratorOptions): MethodDecorator {
   return (target: object, methodName: string | symbol, descriptor: TypedPropertyDescriptor<any>) => {
     const { name, prefix = '', description = '', pattern = '' } = options
 
@@ -44,12 +40,22 @@ function _getParsedPatternParams(
   return patternParams
 }
 
-function _replaceSignatureIndex(patternArgs, functionArguments): PatternParameters {
-  let mutablePatternArgs: PatternParameters = deepClone(patternArgs)
+function _replaceSignatureIndex(patternParams, functionArguments): PatternParameters {
+  let mutablePatternParams: PatternParameters = deepClone(patternParams)
+  _ensureAnyPatternParamCanBeBinded(patternParams, functionArguments)
+
   functionArguments.forEach((arg, index) => {
-    mutablePatternArgs = { ...mutablePatternArgs, [arg]: { ...mutablePatternArgs[arg], signatureIndex: index } }
+    mutablePatternParams = { ...mutablePatternParams, [arg]: { ...mutablePatternParams[arg], signatureIndex: index } }
   })
-  return mutablePatternArgs
+  return mutablePatternParams
+}
+
+function _ensureAnyPatternParamCanBeBinded(patternParams, functionArguments): void {
+  const patternParamsCount = Object.values(patternParams).length
+  if (patternParamsCount > 0 && functionArguments < patternParamsCount) {
+    const lastParamName = Object.keys(patternParams).slice(-1)
+    throw Error(`Parameter specified in pattern has no equaivalent in actual parameters [Param name: ${lastParamName}]`)
+  }
 }
 
 function _hasAnyRequiredParam(patternParams: SinglePatternParameterWithValue[]): boolean {
