@@ -1,6 +1,6 @@
 {
   "name": "nestjs-shell",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An interactive shell for NestJS which allows you to plug-in your custom commands and use them when the app's running",
   "keywords": [
     "nest",

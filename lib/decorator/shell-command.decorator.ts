@@ -1,7 +1,7 @@
-import { CommandDecoratorOptions } from 'lib/type'
 import { deepClone, getFunctionArgs } from '../helper'
 import { parsePattern } from '../pattern.parser'
 import { ShellRegistry } from '../shell.registry'
+import { CommandDecoratorOptions } from '../type'
 import { PatternParameters, SinglePatternParameterWithValue } from '../type/pattern-parameter.type'
 import { mapActualValueToParams } from '../value-to-param.mapper'
 
