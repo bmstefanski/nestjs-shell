@@ -1,13 +1,15 @@
-<div style="text-align: center">
+<div align="center">
   <h1>NestJS Shell</h1>
-  <img src="./shell-example.gif" let="Example GIF of interactive shell">
+  <img width="700" src="./shell-example.gif" let="Example GIF of interactive shell">
   <br />
-  <a href="#"><img alt="travis build badge" src="https://travis-ci.org/bmstefanski/nestjs-shell.svg"></a>  
-  &mdash;  
-  <a href="#"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
-  &mdash;  
-  <a href="#"><img alt="license badge" src="https://img.shields.io/apm/l/bmstefanski/nestjs-shell"></a>  
 </div>
+
+<div align="center">
+  <a href="#"><img alt="travis build badge" src="https://travis-ci.org/bmstefanski/nestjs-shell.svg"></a>  
+  <a href="#"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
+  <a href="#"><img alt="license badge" src="https://img.shields.io/apm/l/bmstefanski/nestjs-shell"></a>    
+</div>
+
 <br />
 
 ## Description
@@ -17,9 +19,10 @@ So I decided to give you full control of where and when shell's instance should 
 
 For more examples, go there: https://github.com/bmstefanski/nestjs-shell-example
 
+
 ## Features
 
-<img align="right" src="./code-sample.png" alt="Code sample with command that prints specified parameters to the console" width="500">   
+<img align="right" src="./code-sample.png" alt="Code sample with command that prints specified parameters to the console" width="600">   
      
 - [x] 🙉 Non-blocking runtime console 
 - [x] 🚚 No dependencies
@@ -28,7 +31,8 @@ For more examples, go there: https://github.com/bmstefanski/nestjs-shell-example
 - [x] 🖥️ Modifiable error messages and prompt sign
 - [x] 🖨️ Elastic output printer (you can write own printer or use any logger you want)
 - [x] 📔 Optional, required and varargs parameters
-- [ ] Travis or GitHub Actions based CI
+- [ ] 📗 Travis or GitHub Actions based CI
+
 
 ## Installation
 
@@ -39,6 +43,7 @@ $ yarn add nestjs-shell
 # development use
 $ yarn add -D nestjs-shell
 ```
+
 
 ## Usage
 
@@ -52,10 +57,12 @@ export class YourAppMainModule implements OnApplicationBootstrap {
   constructor(private readonly shellFacade: ShellFacade) {}
 
   public async onApplicationBootstrap(): Promise<void> {
-    // `ShellModule` is Global, so please put it only in your main module and it will work flawlessly in others. You can use it without passing any arguments and use default configuration or configure it in your own way (table below)
+    /* `ShellModule` is Global, so please put it only in your main module and it will work flawlessly in others. 
+       You can use it without passing any arguments and use default configuration or configure it in your own way.
+    */
     await this.shellFacade.bootstrap()
 
-    // It does not have to be here, you can use this method anywhere you want and as many times as you need. 
+    // It does not have to be here, you can register components anywhere you want and as many times as you need. 
     this.shellFacade.registerComponents(
       new TestCommandComponent(), 
       new AnotherSecondTestCommandComponent(new SomeDependency()),
@@ -68,14 +75,19 @@ export class YourAppMainModule implements OnApplicationBootstrap {
 ```typescript
 import { ShellCommand, ShellComponent } from 'nestjs-shell'
 
-// Please do not put @Injectable() or any other decorator that creates a new instance of the class, it may cause bugs and it is definitely not going to work the way you want. 
+/* Please do not put @Injectable() or any other decorator that creates a new instance of the class, 
+  it may cause bugs and it is definitely not going to work the way you want. 
+*/
 export class SayCommandComponent extends ShellComponent {
 
-  // Only `name` property is required, so by default you have no prefix, no description and no pattern and it works fine!
+  /* Only `name` property is required, so by default you have no prefix, no description and no pattern
+    and it works fine!
+  */
   /* Pattern ideology is simple:
       if your parameter name is wrapped with `<` and `>` then it's required
       if your parameter name is wrapped with `[` and `]` then it's optional
-      if there is `@` sign inside any brackets (`[` or `<`) then it's varargs. Same as in JavaScript varargs, they need to be placed as a last parameter.
+      if there is `@` sign inside any brackets (`[` or `<`) then it's varargs. 
+      Same as in JavaScript varargs, they can only be placed in the last parameter.
   */
   @ShellCommand({
     name: 'say',
@@ -94,8 +106,10 @@ export class SayCommandComponent extends ShellComponent {
     description: 'Sends a message to the console that has been said',
     pattern: '<sender> <@message>',
   })
-  // You don't have to keep function's parameters in the same order as pattern ones. They are applied by name, not order.
-  public async saidCommand(sender: string, message: string): Promise<string> {
+  /* You don't have to keep function's parameters in the same order as pattern ones. 
+    They are applied by name, not order.
+  */
+   public async saidCommand(sender: string, message: string): Promise<string> {
     return `${sender} said: ${message}`
   }
 }
@@ -111,7 +125,9 @@ export class AnotherSecondTestCommandComponent extends ShellComponent {
     super()
   }
 
-  // You can use as much prefixes as you want.. if you do not specify any then it uses default, which is '' (empty string)
+  /* You can use as much prefixes as you want.. 
+    if you do not specify any then it uses default, which is '' (empty string)
+  */
   @ShellCommand({
     name: '.help',
     description: 'Displays all commands with description and usage',
@@ -130,6 +146,7 @@ export class AnotherSecondTestCommandComponent extends ShellComponent {
   }
 }
 ```
+
 
 ## API specification
 The library shares its methods through the facade, named `ShellFacade`. In the table below, you can see a brief description of each method.
@@ -155,9 +172,10 @@ type BootstrapOptions = {
 }
 ```
 
+
 ## Contributions and license
 
-> **Note:** If you want to contribute, please keep in mind that I don't want to support various use cases, it should remain as simple as it is. So if you desire to improve code rather than add features, then I would greatly appreciate it 🙏🙏🏻🙏🏼🙏🏽🙏🏾🙏🏿.
+> **Note:** If you want to contribute, please keep in mind that I don't want to support various use cases, it should remain as simple as it is. So if you desire to improve code rather than add features, then I would greatly appreciate it 🙏🏻🙏🏼🙏🏽🙏🏾🙏🏿.
 
 Nestjs-shell is [MIT licensed](LICENSE)
 
