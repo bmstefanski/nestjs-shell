@@ -59,8 +59,8 @@ function _ensureAnyPatternParamCanBeBinded(patternParams, functionArguments): vo
 }
 
 function _hasAnyRequiredParam(patternParams: SinglePatternParameterWithValue[]): boolean {
-  const requiredParam = patternParams.find((arg) => arg.isRequired)
-  return requiredParam && !requiredParam.value
+  const requiredParamsWithNoValue = patternParams.filter((param) => param.isRequired && !param.value)
+  return requiredParamsWithNoValue.length > 0
 }
 
 function _mapParamsToValueOnly(patternParams: SinglePatternParameterWithValue[]): string[] {

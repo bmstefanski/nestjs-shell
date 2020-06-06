@@ -107,4 +107,17 @@ describe('ShellCommand', () => {
 
     expect(results).toStrictEqual('arg1: null | arg2: null')
   })
+
+  it('should respect required parameter even when it is not first', async () => {
+    const componentInstance = new TestCommandComponent()
+    let results = ''
+
+    registerComponentAndDecorateCommand(componentInstance, 'twoParametersCommand', {
+      name: 'test',
+      pattern: '<arg1> <arg2>',
+    })
+    await executeCommand('test', ['123'], (v) => (results = v), 'Wrong usage: $command $pattern')
+
+    expect(results).toStrictEqual('Wrong usage: test <arg1> <arg2>')
+  })
 })
