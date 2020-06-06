@@ -13,7 +13,7 @@
 <br />
 
 ## Description
-I wanted to create as simple as possible API without redundant use cases. Which you allow to create simple a command in less than a minute (counting installation time).
+I wanted to create as simple as possible API without redundant use cases. Which allows you to create a simple command in less than a minute (counting installation time).
 Currently, there are a few libraries that provide something similar to this, but they violate your app's execution file with their code and require you to re-run the app's instance every time you want to execute a command.   
 So I decided to give you full control of where and when shell's instance should start and a way to execute commands in runtime.
 
@@ -51,20 +51,18 @@ $ yarn add -D nestjs-shell
 ```typescript
 import { ShellFacade } from 'nestjs-shell'
 
-// `ShellModule` is Global, so please put it only in your main module and it will work perfectly in others.
+// `ShellModule` is Global, so please put it only in your main module and it will work flawlessly in others. 
 @Module({ imports: [ShellModule] })
 export class YourAppMainModule implements OnApplicationBootstrap {
   constructor(private readonly shellFacade: ShellFacade) {}
 
   public async onApplicationBootstrap(): Promise<void> {
-    /* `ShellModule` is Global, so please put it only in your main module and it will work flawlessly in others. 
-       You can use it without passing any arguments and use default configuration or configure it in your own way.
-    */
+    // You can use it without passing any arguments and use default configuration or configure it in your own way.
     await this.shellFacade.bootstrap()
 
     // It does not have to be here, you can register components anywhere you want and as many times as you need. 
     this.shellFacade.registerComponents(
-      new TestCommandComponent(), 
+      new SayCommandComponent(), 
       new AnotherSecondTestCommandComponent(new SomeDependency()),
     )
   }
@@ -75,7 +73,7 @@ export class YourAppMainModule implements OnApplicationBootstrap {
 ```typescript
 import { ShellCommand, ShellComponent } from 'nestjs-shell'
 
-/* Please do not put @Injectable() or any other decorator that creates a new instance of the class, 
+/* Please do not put @Injectable() or any other decorator that creates a new instance of a class, 
   it may cause bugs and it is definitely not going to work the way you want. 
 */
 export class SayCommandComponent extends ShellComponent {
@@ -126,7 +124,7 @@ export class AnotherSecondTestCommandComponent extends ShellComponent {
   }
 
   /* You can use as much prefixes as you want.. 
-    if you do not specify any then it uses default, which is '' (empty string)
+    if you do not specify any then it uses the default, which is '' (empty string)
   */
   @ShellCommand({
     name: '.help',
@@ -155,11 +153,11 @@ import { ShellFacade } from 'nestjs-shell'
 ```
 
 
-| Method               |                             Description                              |             Arguments             |
-| :------------------- | :------------------------------------------------------------------: | :-------------------------------: |
-| `bootstrap`          |                           Enables terminal                           |        `BootstrapOptions`         |
-| `registerComponents` |               Adds command components to the registry                | `...components: ShellComponent[]` |
-| `getAllCommands`     | Returns immutable (or to be more precise: deep copy of a collection) |              naught               |
+| Method               |                              Description                              |             Arguments             |
+| :------------------- | :-------------------------------------------------------------------: | :-------------------------------: |
+| `bootstrap`          |                           Enables terminal                            |        `BootstrapOptions`         |
+| `registerComponents` |                Adds command components to the registry                | `...components: ShellComponent[]` |
+| `getAllCommands`     | Returns immutable (or to be more precise: deep copy of a) collection) |              naught               |
 
 ```typescript
 type BootstrapOptions = {
