@@ -1,6 +1,6 @@
 <div align="center">
   <h1>NestJS Shell</h1>
-  <img width="700" src="./shell-example.gif" let="Example GIF of interactive shell">
+  <img width="700" src="https://raw.githubusercontent.com/bmstefanski/nestjs-shell/master/shell-example.gif" let="Example GIF of interactive shell">
   <br />
 </div>
 
@@ -8,7 +8,7 @@
   <a href="https://travis-ci.org/github/bmstefanski/nestjs-shell"><img alt="travis build badge" src="https://travis-ci.org/bmstefanski/nestjs-shell.svg?branch=master"></a>  
   <a href="https://www.npmjs.com/package/nestjs-shell"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
   <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/nestjs-shell">
-  <img alt="license badge" src="https://img.shields.io/apm/l/bmstefanski/nestjs-shell">
+  <img alt="license badge" src="https://img.shields.io/npm/l/nestjs-shell">
 </div>
 
 <br />
@@ -23,7 +23,7 @@ For more examples, go there: https://github.com/bmstefanski/nestjs-shell-example
 
 ## Features
 
-<img align="right" src="./code-sample.png" alt="Code sample with command that prints specified parameters to the console" width="600">   
+<img align="right" src="https://raw.githubusercontent.com/bmstefanski/nestjs-shell/master/code-sample.png" alt="Code sample with command that prints specified parameters to the console" width="600">   
      
 - [x] 🙉 Non-blocking runtime console 
 - [x] 🚚 No dependencies
