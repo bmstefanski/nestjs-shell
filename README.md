@@ -5,9 +5,10 @@
 </div>
 
 <div align="center">
-  <a href="#"><img alt="travis build badge" src="https://travis-ci.org/bmstefanski/nestjs-shell.svg"></a>  
-  <a href="#"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
-  <a href="#"><img alt="license badge" src="https://img.shields.io/apm/l/bmstefanski/nestjs-shell"></a>    
+  <a href="https://travis-ci.org/github/bmstefanski/nestjs-shell"><img alt="travis build badge" src="https://travis-ci.org/bmstefanski/nestjs-shell.svg?branch=master"></a>  
+  <a href="https://www.npmjs.com/package/nestjs-shell"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
+  <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/nestjs-shell">
+  <img alt="license badge" src="https://img.shields.io/apm/l/bmstefanski/nestjs-shell">
 </div>
 
 <br />
