@@ -9,6 +9,7 @@
   <a href="https://www.npmjs.com/package/nestjs-shell"><img alt="npm version badge" src="https://img.shields.io/npm/v/nestjs-shell"></a>  
   <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/nestjs-shell">
   <img alt="license badge" src="https://img.shields.io/npm/l/nestjs-shell">
+  <a href='https://coveralls.io/github/bmstefanski/nestjs-shell?branch=master'><img src='https://coveralls.io/repos/github/bmstefanski/nestjs-shell/badge.svg?branch=master' alt='Coverage Status' /></a>
 </div>
 
 <br />
