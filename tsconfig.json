@@ -2,15 +2,17 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "noImplicitAny": false,
     "removeComments": true,
+    "noLib": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2017",
-    "sourceMap": true,
+    "target": "es6",
+    "sourceMap": false,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true
+    "rootDir": "./lib",
+    "skipLibCheck": true
   },
-  "include": ["*.ts", "**/*.ts"],
-  "exclude": ["./index.ts", "./index.d.ts", "./**/*.spec.ts", "./lib/__stubs__", "node_modules"]
+  "include": ["lib/**/*", "../index.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
