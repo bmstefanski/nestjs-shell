@@ -51,7 +51,7 @@ $ yarn add -D nestjs-shell
 
 ##### Execution and registration
 ```typescript
-import { ShellFacade } from 'nestjs-shell'
+import { ShellModule, ShellFacade } from 'nestjs-shell'
 
 // `ShellModule` is Global, so please put it only in your main module and it will work flawlessly in others. 
 @Module({ imports: [ShellModule] })
