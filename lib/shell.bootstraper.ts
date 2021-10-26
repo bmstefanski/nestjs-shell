@@ -1,10 +1,10 @@
 import { ShellRegistry } from './shell.registry'
 import { BootstrapOptions } from './type/bootstrap-options.type'
 
-const readline = require('readline')
+import { createInterface } from 'readline'
 
 export async function bootstrapShell(options: BootstrapOptions = { prompt: '⤳' }): Promise<void> {
-  const rl = readline.createInterface({
+  const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
     prompt: `${options.prompt} `,
@@ -18,6 +18,8 @@ export async function bootstrapShell(options: BootstrapOptions = { prompt: '⤳'
   }
 
   const onLine = async (line) => {
+    if (!line) return
+
     const splittedLineResult = line.trim().split(' ')
     const command = ShellRegistry.findCommand(splittedLineResult[0])
 
@@ -31,4 +33,6 @@ export async function bootstrapShell(options: BootstrapOptions = { prompt: '⤳'
   }
 
   rl.on('line', async (input) => onLine(input).then(() => rl.prompt())).on('close', () => process.exit())
+
+  rl.emit('line')
 }
